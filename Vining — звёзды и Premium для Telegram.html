@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vining — звёзды и Premium для Telegram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF4FB; --surface:#FFFFFF; --ink:#0F2233; --muted:#51697C; --line:#C9DDEB;
+  --tg:#1F8FD0; --tg-ink:#FFFFFF; --star:#F2A900; --prem:#6D4FF0; --ok:#1C8A57;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1822; --surface:#13273A; --ink:#E8F2FA; --muted:#8FA8BB; --line:#24405A;
+    --tg:#3AA7E8; --tg-ink:#06131D; --star:#FFC233; --prem:#9A83FF; --ok:#4CD08C;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1822; --surface:#13273A; --ink:#E8F2FA; --muted:#8FA8BB; --line:#24405A;
+  --tg:#3AA7E8; --tg-ink:#06131D; --star:#FFC233; --prem:#9A83FF; --ok:#4CD08C;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Onest,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:28px 18px 40px}
+h1{font:700 clamp(28px,8vw,42px)/1.1 Unbounded,Onest,system-ui,sans-serif;margin:0 0 12px;letter-spacing:-.02em}
+.lead{color:var(--muted);margin:0 0 24px;max-width:46ch}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:18px}
+.tab{border:0;background:transparent;color:var(--muted);font:600 16px Onest,sans-serif;padding:12px;border-radius:12px;cursor:pointer;min-height:48px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.tab:focus-visible,.pack:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--tg);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.pack{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;font:inherit;min-height:84px}
+.pack b{font:700 20px Unbounded,Onest,sans-serif}
+.pack span{color:var(--muted);font-size:14px}
+.pack[aria-pressed="true"]{border-color:var(--accent,var(--tg));box-shadow:0 0 0 1px var(--accent,var(--tg)) inset}
+.pack small{color:var(--ok);font-weight:600;font-size:13px}
+.field{display:block;margin-bottom:18px}
+.field label{display:block;font-weight:600;margin-bottom:6px}
+.field input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:13px 14px}
+.hint{color:var(--muted);font-size:14px;margin:6px 0 0}
+.buy{width:100%;border:0;border-radius:14px;background:var(--tg);color:var(--tg-ink);font:600 17px Onest,sans-serif;padding:16px;cursor:pointer;min-height:54px}
+.buy:active{transform:scale(.99)}
+.err{color:#D13B3B;font-size:14px;margin:6px 0 0;min-height:1em}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .err{color:#FF8A8A}}
+.receipt{margin-top:18px;background:var(--surface);border:2px solid var(--ok);border-radius:14px;padding:16px}
+.receipt[hidden]{display:none}
+.addr{word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}
+.copy{border:2px solid var(--tg);background:transparent;color:var(--ink);font:600 15px Onest,sans-serif;border-radius:12px;padding:10px 14px;cursor:pointer;min-height:44px}
+.receipt h2{font:700 18px Unbounded,Onest,sans-serif;margin:0 0 8px}
+.receipt p{margin:4px 0}
+.note{color:var(--muted);font-size:14px;margin-top:10px}
+.trust{margin:28px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.trust li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.trust b{display:block}
+.trust span{color:var(--muted);font-size:15px}
+footer{margin-top:28px;color:var(--muted);font-size:13px}
+section{margin-top:32px}
+h2.s{font:700 20px Unbounded,Onest,sans-serif;margin:0 0 12px}
+ol.steps{margin:0;padding-left:22px;display:grid;gap:8px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 14px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600;padding:13px 0;min-height:48px}
+details p{margin:0 0 14px;color:var(--muted);font-size:15px}
+.legal{border-top:1px solid var(--line);padding-top:16px;display:grid;gap:4px}
+.custom{display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.custom input{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px}
+.custom span{color:var(--muted);white-space:nowrap}
+</style>
+</head>
+<body>
+<main>
+  <h1>Vining: звёзды и Premium для Telegram</h1>
+  <p class="lead">Выберите, что нужно, укажите свой @username — и всё придёт на ваш аккаунт. Пароль и код из SMS не нужны.</p>
+
+  <div class="tabs" role="tablist" aria-label="Что купить">
+    <button class="tab" role="tab" id="tab-stars" aria-selected="true" aria-controls="panel">Звёзды</button>
+    <button class="tab" role="tab" id="tab-prem" aria-selected="false" aria-controls="panel">Premium</button>
+  </div>
+
+  <div id="panel" role="tabpanel">
+    <div class="grid" id="packs"></div>
+    <div class="custom" id="customBox">
+      <input id="custom" type="number" inputmode="numeric" min="50" max="100000" placeholder="Своё количество, от 50" aria-label="Своё количество звёзд">
+      <span id="customPrice"></span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="user">Ваш @username в Telegram</label>
+    <input id="user" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="@username" inputmode="text">
+    <p class="err" id="err" role="alert"></p>
+  </div>
+
+  <button class="buy" id="buy" type="button">Оплатить криптовалютой</button>
+  <p class="hint">Оплата только криптовалютой: USDT в сети BNB Smart Chain (BEP-20). Адрес для перевода появится после оформления заказа.</p>
+
+  <div class="receipt" id="receipt" hidden aria-live="polite">
+    <h2>Заказ собран</h2>
+    <p id="rItem"></p>
+    <p id="rUser"></p>
+    <p id="rSum"></p>
+    <p>Переведите USDT в сети BNB Smart Chain (BEP-20) на адрес:</p>
+    <p class="addr" id="rAddr">0xd013D0d2B6e8Dc00DC204F70F0E782C7b46a57A7</p>
+    <button type="button" class="copy" id="copy">Скопировать адрес</button>
+    <p class="note">Отправляйте только USDT и только в этой сети. Перевод в другой сети или другой монетой может быть потерян.</p>
+    <p class="note">Это демо-версия: оплата и выдача пока не подключены. Чтобы принимать реальные платежи, нужен серверный модуль с криптоплатёжным провайдером (или собственными кошельками) и доступом к Telegram. Курс в демо условный.</p>
+  </div>
+
+  <ul class="trust">
+    <li><b>Только @username</b><span>Мы никогда не просим пароль, код входа или доступ к аккаунту.</span></li>
+    <li><b>Цена видна до оплаты</b><span>Сумма пересчитывается сразу при выборе пакета.</span></li>
+    <li><b>Звёзды тратятся в Telegram</b><span>Подарки, подписки на каналы, боты и мини-приложения.</span></li>
+  </ul>
+  <section id="how">
+    <h2 class="s">Как это работает</h2>
+    <ol class="steps">
+      <li>Выберите звёзды или Premium и укажите @username получателя.</li>
+      <li>Проверьте сумму и оплатите заказ.</li>
+      <li>После оплаты звёзды или подписка появятся в Telegram получателя.</li>
+    </ol>
+  </section>
+
+  <section id="faq">
+    <h2 class="s">Вопросы и ответы</h2>
+    <details><summary>Чем можно оплатить?</summary><p>Только USDT в сети BNB Smart Chain (BEP-20). Банковские карты и другие способы не принимаются. Отправляйте только USDT и только в этой сети: перевод в другой сети или другой монетой может пропасть. Заказ оплачивается по курсу, который показан в момент оформления.</p></details>
+    <details><summary>Нужен ли пароль или код из Telegram?</summary><p>Нет. Для заказа достаточно @username. Никогда не передавайте никому код входа и пароль — Vining их не запрашивает.</p></details>
+    <details><summary>Можно купить в подарок другому человеку?</summary><p>Да, укажите @username получателя. Проверьте его написание перед оплатой: заказ выдаётся на указанный аккаунт.</p></details>
+    <details><summary>Что делать, если заказ не пришёл?</summary><p>Напишите в поддержку и приложите @username и время оплаты. Мы проверим заказ и либо доставим его, либо вернём деньги.</p></details>
+    <details><summary>Как оформить возврат?</summary><p>Если заказ ещё не выдан, оплата возвращается полностью. Выданные звёзды и Premium возврату не подлежат — подробности в условиях ниже.</p></details>
+  </section>
+
+  <section id="terms">
+    <h2 class="s">Условия сервиса</h2>
+    <details><summary>Условия покупки и возврата</summary><p>Заказ считается оформленным после оплаты. Товар выдаётся на указанный @username. Ошибка в @username, допущенная покупателем, не является основанием для возврата после выдачи. Если выдача невозможна, возврат делается в той же криптовалюте на адрес, с которого пришёл платёж, за вычетом комиссии сети. Криптоплатежи необратимы, поэтому перед оплатой проверяйте сеть, адрес и сумму.</p></details>
+    <details><summary>Конфиденциальность</summary><p>Мы храним только @username и данные заказа, нужные для его выдачи и поддержки. Данные не передаются третьим лицам, кроме платёжной системы, которая проводит оплату.</p></details>
+  </section>
+
+  <footer>
+    <div class="legal">
+      <span>Vining</span>
+      <span>Продавец: [название ИП или ООО], ИНН [номер]</span>
+      <span>Поддержка: [email или @аккаунт поддержки]</span>
+      <span>Vining — независимый сервис и не связан с Telegram Messenger Inc. Telegram — товарный знак его владельца. Цены на странице — пример.</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var RATE = 1.7;
+  var USDT_RATE = 95;
+  var STARS = [50,100,250,500,1000,2500];
+  var PREM = [
+    {m:3, price:1190, label:"3 месяца"},
+    {m:6, price:1590, label:"6 месяцев", note:"выгоднее на 33%"},
+    {m:12, price:2790, label:"12 месяцев", note:"выгоднее на 41%"}
+  ];
+  var mode = "stars", pick = {stars:100, prem:6};
+  var packs = document.getElementById("packs");
+  var customBox = document.getElementById("customBox");
+  var custom = document.getElementById("custom");
+  var customPrice = document.getElementById("customPrice");
+  var errEl = document.getElementById("err");
+  var receipt = document.getElementById("receipt");
+  var tabS = document.getElementById("tab-stars");
+  var tabP = document.getElementById("tab-prem");
+
+  function rub(n){ return new Intl.NumberFormat("ru-RU").format(Math.round(n)) + " ₽"; }
+  function starPrice(n){ return n * RATE; }
+
+  function render(){
+    packs.innerHTML = "";
+    document.documentElement.style.setProperty("--accent", mode === "stars" ? "var(--star)" : "var(--prem)");
+    if (mode === "stars"){
+      STARS.forEach(function(n){
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "pack";
+        b.setAttribute("aria-pressed", String(pick.stars === n && !custom.value));
+        b.innerHTML = "<b>★ " + new Intl.NumberFormat("ru-RU").format(n) + "</b><span>" + rub(starPrice(n)) + "</span>";
+        b.addEventListener("click", function(){ pick.stars = n; custom.value = ""; customPrice.textContent = ""; render(); });
+        packs.appendChild(b);
+      });
+      customBox.style.display = "flex";
+    } else {
+      PREM.forEach(function(p){
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "pack";
+        b.setAttribute("aria-pressed", String(pick.prem === p.m));
+        b.innerHTML = "<b>" + p.label + "</b><span>" + rub(p.price) + "</span>" + (p.note ? "<small>" + p.note + "</small>" : "");
+        b.addEventListener("click", function(){ pick.prem = p.m; render(); });
+        packs.appendChild(b);
+      });
+      customBox.style.display = "none";
+    }
+    receipt.hidden = true;
+  }
+
+  function setMode(m){
+    mode = m;
+    tabS.setAttribute("aria-selected", String(m === "stars"));
+    tabP.setAttribute("aria-selected", String(m === "prem"));
+    render();
+  }
+  tabS.addEventListener("click", function(){ setMode("stars"); });
+  tabP.addEventListener("click", function(){ setMode("prem"); });
+
+  custom.addEventListener("input", function(){
+    var n = parseInt(custom.value, 10);
+    customPrice.textContent = n >= 50 ? rub(starPrice(n)) : "";
+    Array.prototype.forEach.call(packs.children, function(b){ b.setAttribute("aria-pressed", "false"); });
+    receipt.hidden = true;
+  });
+
+  document.getElementById("buy").addEventListener("click", function(){
+    errEl.textContent = "";
+    var u = document.getElementById("user").value.trim();
+    if (u.charAt(0) !== "@") u = "@" + u;
+    if (!/^@[A-Za-z][A-Za-z0-9_]{4,31}$/.test(u)){
+      errEl.textContent = "Введите username: 5–32 символа, латиница, цифры и «_», начинается с буквы.";
+      return;
+    }
+    var item, sum;
+    if (mode === "stars"){
+      var n = custom.value ? parseInt(custom.value, 10) : pick.stars;
+      if (!(n >= 50 && n <= 100000)){
+        errEl.textContent = "Количество звёзд — от 50 до 100 000.";
+        return;
+      }
+      item = "★ " + new Intl.NumberFormat("ru-RU").format(n) + " звёзд";
+      sum = starPrice(n);
+    } else {
+      var p = PREM.filter(function(x){ return x.m === pick.prem; })[0];
+      item = "Telegram Premium, " + p.label;
+      sum = p.price;
+    }
+    document.getElementById("rItem").textContent = "Товар: " + item;
+    document.getElementById("rUser").textContent = "Получатель: " + u;
+    document.getElementById("rSum").textContent = "К оплате: ≈ " + (sum / USDT_RATE).toFixed(2) + " USDT (" + rub(sum) + "). Только криптовалютой.";
+    receipt.hidden = false;
+    receipt.scrollIntoView({behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"nearest"});
+  });
+
+  var copyBtn = document.getElementById("copy");
+  copyBtn.addEventListener("click", function(){
+    var addr = document.getElementById("rAddr").textContent;
+    function done(){ copyBtn.textContent = "Адрес скопирован"; setTimeout(function(){ copyBtn.textContent = "Скопировать адрес"; }, 2000); }
+    try {
+      navigator.clipboard.writeText(addr).then(done, function(){ copyBtn.textContent = "Выделите адрес и скопируйте вручную"; });
+    } catch (e) {
+      copyBtn.textContent = "Выделите адрес и скопируйте вручную";
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
